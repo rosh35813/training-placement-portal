@@ -41,6 +41,7 @@ $st_password="";
 
 $errors = array();
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/student_validation.php';
 $db = db_connect();
 if (isset($_POST['reg_student'])) 
 {
@@ -49,24 +50,24 @@ if (isset($_POST['reg_student']))
       die('CSRF token validation failed');
   }
   
-  $student_id = mysqli_real_escape_string($db, $_POST['student_id']);
-  $student_name = mysqli_real_escape_string($db, $_POST['student_name']);
-  $dob = mysqli_real_escape_string($db, $_POST['dob']);
-  $gender = mysqli_real_escape_string($db, $_POST['gender']);
-  $st_email = mysqli_real_escape_string($db, $_POST['st_email']);
-  $address1 = mysqli_real_escape_string($db, $_POST['address1']);
-  $contact_num = mysqli_real_escape_string($db, $_POST['contact_num']);
-  $branch = mysqli_real_escape_string($db, $_POST['branch']);
-  $tenth_per = mysqli_real_escape_string($db, $_POST['tenth_per']);
-  $tenth_pass = mysqli_real_escape_string($db, $_POST['tenth_pass']);
-  $twelfth_per = mysqli_real_escape_string($db, $_POST['twelfth_per']);
-  $twelfth_pass = mysqli_real_escape_string($db, $_POST['twelfth_pass']);
-  $cgpa = mysqli_real_escape_string($db, $_POST['cgpa']);
-  $pass = mysqli_real_escape_string($db, $_POST['pass']);
-  $backlogs = mysqli_real_escape_string($db, $_POST['backlogs']);
-  $apply = mysqli_real_escape_string($db, $_POST['apply']);
-  $st_password1 = mysqli_real_escape_string($db, $_POST['st_password1']);
-  $st_password2 = mysqli_real_escape_string($db, $_POST['st_password2']);
+  $student_id = sanitize_student_input($_POST['student_id']);
+  $student_name = sanitize_student_input($_POST['student_name']);
+  $dob = sanitize_student_input($_POST['dob']);
+  $gender = sanitize_student_input($_POST['gender']);
+  $st_email = sanitize_student_input($_POST['st_email']);
+  $address1 = sanitize_student_input($_POST['address1']);
+  $contact_num = sanitize_student_input($_POST['contact_num']);
+  $branch = sanitize_student_input($_POST['branch']);
+  $tenth_per = sanitize_student_input($_POST['tenth_per']);
+  $tenth_pass = sanitize_student_input($_POST['tenth_pass']);
+  $twelfth_per = sanitize_student_input($_POST['twelfth_per']);
+  $twelfth_pass = sanitize_student_input($_POST['twelfth_pass']);
+  $cgpa = sanitize_student_input($_POST['cgpa']);
+  $pass = sanitize_student_input($_POST['pass']);
+  $backlogs = sanitize_student_input($_POST['backlogs']);
+  $apply = sanitize_student_input($_POST['apply']);
+  $st_password1 = sanitize_student_input($_POST['st_password1']);
+  $st_password2 = sanitize_student_input($_POST['st_password2']);
 
   if (empty($student_id)) 
   { 
@@ -128,17 +129,35 @@ if (isset($_POST['reg_student']))
   { 
     array_push($errors, "Password is required"); 
   }
-  if ($st_password1 != $st_password2) 
-  {
-    array_push($errors, "passwords do not match");
+  
+  if (!empty($st_password1) && !empty($st_password2)) {
+    if ($st_password1 != $st_password2) 
+    {
+      array_push($errors, "Passwords do not match");
+    }
   }
   
-  if (filter_var($st_email, FILTER_VALIDATE_EMAIL)) 
-  {
+  // Validate password strength: min 8 chars, uppercase, lowercase, number
+  if (!empty($st_password1)) {
+    $pwd_check = validate_password_strength($st_password1);
+    if (!$pwd_check['valid']) {
+      foreach ($pwd_check['errors'] as $pwd_error) {
+        array_push($errors, $pwd_error);
+      }
+    }
   }
-  else 
-  {
-    array_push($errors, "email is not a valid email address"); 
+  
+  // Validate and sanitize email, check for duplicates
+  if (!empty($st_email)) {
+    $email_check = validate_student_email($st_email);
+    if (!$email_check['valid']) {
+      array_push($errors, "Email is not a valid email address");
+    } else {
+      $st_email = $email_check['email'];
+      if (check_email_exists($db, $st_email)) {
+        array_push($errors, "Email already registered in the system");
+      }
+    }
   }
 
   if(($apply=='internship' or $apply=='Internship') and $pass!='2027')
@@ -149,47 +168,33 @@ if (isset($_POST['reg_student']))
   {
     array_push($errors, "Not eligible for placement i.e not 4th year student"); 
   }
-  if(strlen($contact_num)!=10)
-  {
-     array_push($errors, "Contact Number not correct"); 
+  // Validate contact number (10 digits)
+  if (!empty($contact_num) && !validate_contact_10digit($contact_num)) {
+    array_push($errors, "Contact number must be exactly 10 digits");
   }
-  if($cgpa<1 or $cgpa>10)
-  {
-    array_push($errors, "This CGPA not possible");
+  
+  // Validate CGPA range
+  if (!empty($cgpa) && !validate_cgpa_range($cgpa)) {
+    array_push($errors, "CGPA must be between 0 and 10");
   }
-  if($tenth_per<1 or $tenth_per>100)
-  {
-    array_push($errors, "This 10th % not possible");
+  
+  // Validate 10th percentage
+  if (!empty($tenth_per) && !validate_percentage_range($tenth_per)) {
+    array_push($errors, "10th percentage must be between 0 and 100");
   }
-  if($twelfth_per<1 or $twelfth_per>100)
-  {
-    array_push($errors, "This 12th %  not possible");
+  
+  // Validate 12th percentage
+  if (!empty($twelfth_per) && !validate_percentage_range($twelfth_per)) {
+    array_push($errors, "12th percentage must be between 0 and 100");
   }
   if(((int)$twelfth_pass-(int)$tenth_pass)<2)
   {
-    array_push($errors, "10th and 12th pass not correct");
+    array_push($errors, "Gap between 10th and 12th passing years must be at least 2 years");
   }
-  $stmt = $db->prepare("SELECT * FROM student WHERE STUDENT_NAME=? AND STUDENT_ID=? LIMIT 1");
-  $stmt->bind_param('ss', $student_name, $student_id);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  $user = $result->fetch_assoc();
-  $stmt->close();
   
-  if ($user)
-  {
-    if ($user['STUDENT_NAME'] === $student_name) 
-    {
-      array_push($errors, "Student already registered");
-    }
-    if ($user['STUDENT_ID'] === $student_id) 
-    {
-      array_push($errors, "Id already exists");
-    }
-    if ($user['EMAIL'] === $st_email) 
-    {
-      array_push($errors, "email already exists");
-    }
+  // Check for duplicate Student ID
+  if (!empty($student_id) && check_student_id_exists($db, $student_id)) {
+    array_push($errors, "Student ID already registered");
   }
 
   if (count($errors) == 0) 

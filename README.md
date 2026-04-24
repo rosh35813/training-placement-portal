@@ -37,7 +37,9 @@ Developed collaboratively as a team project, with contributions across:
 - Secure Password Hashing
 - Session Security &  XSS Protection
 - Input Validation & Sanitization
+
 ---
+
 ## Screenshots
 
 ### Landing Page
@@ -81,6 +83,7 @@ Developed collaboratively as a team project, with contributions across:
 - Company approval
 - Notification system
 - Reports & analytics
+
 ---
 
 ## 📋 Quick Start
@@ -137,7 +140,6 @@ TnP/
 ```
 
 ---
-
 
 ## 📚 Documentation
 
