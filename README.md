@@ -28,15 +28,16 @@ Developed collaboratively as a team project, with contributions across:
 - Full-stack development for student, company, and admin modules
 - Backend logic and MySQL database integration
 - Authentication, validation, and security feature implementation
+- Enhanced student registration with stronger validation, sanitization, and error handling
 - UI development, testing, debugging, and feature integration
 
 ## Engineering Challenges Solved
+- Improved server-side and client-side input validation & Sanitization
+- Role-based access control across multiple user types
 - SQL injection prevention using prepared statements
 - CSRF protection for form security
-- Role-based access control across multiple user types
 - Secure Password Hashing
 - Session Security &  XSS Protection
-- Input Validation & Sanitization
 
 ---
 
