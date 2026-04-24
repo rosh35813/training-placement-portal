@@ -4,7 +4,7 @@
 
 ![SVNIT Logo](assets/images/Svnit_logo.png)
 
-**A comprehensive, secure, and production-ready web-based portal for managing Training and Placement activities at Sardar Vallabhbhai National Institute of Technology (SVNIT), Surat.**
+**A secure web-based portal for managing Training and Placement activities at Sardar Vallabhbhai National Institute of Technology (SVNIT), Surat.**
 
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
 [![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-orange.svg)](https://www.mysql.com/)
@@ -13,6 +13,74 @@
 
 </div>
 
+---
+
+## Tech Stack
+- PHP
+- MySQL
+- JavaScript
+- HTML/CSS
+- XAMPP
+
+## My Contributions
+Developed collaboratively as a team project, with contributions across:
+
+- Full-stack development for student, company, and admin modules
+- Backend logic and MySQL database integration
+- Authentication, validation, and security feature implementation
+- UI development, testing, debugging, and feature integration
+
+## Engineering Challenges Solved
+- SQL injection prevention using prepared statements
+- CSRF protection for form security
+- Role-based access control across multiple user types
+- Secure Password Hashing
+- Session Security &  XSS Protection
+- Input Validation & Sanitization
+---
+## Screenshots
+
+### Landing Page
+<p align="center">
+  <img src="screenshots/home.png" width="800">
+</p>
+
+### Student Registration
+<p align="center">
+  <img src="screenshots/student-registration.png" width="800">
+</p>
+
+### Admin Dashboard
+<p align="center">
+  <img src="screenshots/admin-dashboard.png" width="800">
+</p>
+
+### Company Dashboard
+<p align="center">
+  <img src="screenshots/company-dashboard.png" width="800">
+</p>
+
+---
+
+## 🚀 Features
+
+### For Students
+- Separate Internship & Placement portals
+- Profile management
+- Company applications
+- Notifications
+
+### For Companies
+- Registration & approval system
+- Post opportunities
+- Manage applications
+- Student database access
+
+### For Administrators
+- User management
+- Company approval
+- Notification system
+- Reports & analytics
 ---
 
 ## 📋 Quick Start
@@ -70,16 +138,6 @@ TnP/
 
 ---
 
-## 🔒 Security Features
-
-- ✅ SQL Injection Protection (Prepared Statements)
-- ✅ CSRF Protection (All Forms)
-- ✅ Secure Password Hashing
-- ✅ Session Security
-- ✅ Input Validation & Sanitization
-- ✅ XSS Protection
-
----
 
 ## 📚 Documentation
 
@@ -89,39 +147,7 @@ TnP/
 
 ---
 
-## 🚀 Features
-
-### For Students
-- Separate Internship & Placement portals
-- Profile management
-- Company applications
-- Notifications
-
-### For Companies
-- Registration & approval system
-- Post opportunities
-- Manage applications
-- Student database access
-
-### For Administrators
-- User management
-- Company approval
-- Notification system
-- Reports & analytics
+## Demo
+Live deployment coming soon
 
 ---
-
-## 📞 Support
-
-- **Email**: tnpcell.svnit@gmail.com
-
----
-
-<div align="center">
-
-**Made with ❤️ for SVNIT Training & Placement Cell**
-
-⭐ Star this repo if you find it helpful!
-
-</div>
-
